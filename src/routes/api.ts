@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { Auth } from '../middlewares/auth'
 
 import * as ApiController from '../controllers/apiController'
 
@@ -10,7 +11,7 @@ const router = Router()
 //Criando as rotas
 router.post('/register', ApiController.register)
 router.post('/login', ApiController.login)
-router.get('/list', ApiController.list)
+router.get('/list', Auth.private,  ApiController.list)
 
 
 
