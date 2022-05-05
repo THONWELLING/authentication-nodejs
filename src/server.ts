@@ -16,6 +16,7 @@ server.use(cors())
 server.use(express.static(path.join(__dirname, '../public')))
 server.use(express.urlencoded({ extended: true }))
 
+//usando uma rota de teste
 server.get('/ping', (req: Request, res: Response) => res.json({ pong: true }))
 
 //usando as rotas do nosso arquivo routes

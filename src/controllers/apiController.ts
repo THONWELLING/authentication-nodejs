@@ -1,7 +1,11 @@
 import { Request, Response } from 'express'
 import { User } from '../models/User'
+import  JWT  from 'jsonwebtoken'
+import dotenv from 'dotenv'
 
 
+
+dotenv.config()
 
 //Rota de teste
 
@@ -18,8 +22,15 @@ export const register = async (req: Request, res: Response) => {
 
     if(!hasUser) {
       let newUser = await User.create({ email, password })
+      // gerando um token quan do fazemos o register de novo usuário
+      const token = JWT.sign(
+        { id: newUser.id, email: newUser.email },
+        process.env.JWT_SECRET as string,
+        { expiresIn: '15d' }
+      )
+
       res.status(201)
-      res.json({ id: newUser.id })
+      res.json({ id: newUser.id, token })
     } else {
       res.json({ error: 'Email Already Exists!!' })
     }
@@ -39,7 +50,14 @@ export const login = async (req: Request, res: Response) => {
     })
 
     if(user) {
-      res.json({ status: true })
+      //gerando o token
+      const token = JWT.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET as string,
+        { expiresIn: '15d' }
+      )
+
+      res.json({ status: true, token })
       return
     }
   }
